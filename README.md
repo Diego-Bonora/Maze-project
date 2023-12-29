@@ -1,1 +1,1 @@
-### future redme for the maze project
+### future readme for the maze project
