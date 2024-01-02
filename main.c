@@ -1,11 +1,22 @@
 #include "main.h"
 
 int map_grid[16][28];
+struct Player square;
+int WIDTH = 1260, HEIGHT = 720;
+
+/*
+Main function that sets some constant values, calls the initializer function, draws the game and deletes all when closed
+*/
 
 int main(int argc, char *argv[])
 {
     generate_map_grid();
-    int WIDTH = 1260, HEIGHT = 720;
+
+    const Uint8 *KeyState;
+
+    /* size and movement speed of the player */
+    square.size = 7;
+    square.movement_speed = 1;
 
     SDL_Instance instance;
 
@@ -14,52 +25,40 @@ int main(int argc, char *argv[])
 
     while (1)
     {
-        SDL_SetRenderDrawColor(instance.renderer, 255, 255, 255, 255);
-        SDL_RenderClear(instance.renderer);
+        SDL_SetRenderDrawColor(instance.renderer, 255, 255, 255, 255); /* background color of the window, in this case white */
+        SDL_RenderClear(instance.renderer);                            /* clears the screen */
         if (poll_events() == 1)
             break;
-        /*
-        draws
-        */
-        box_struct(instance);
+
+        KeyState = SDL_GetKeyboardState(NULL); /* state checker for the player movement */
+        if (KeyState[SDL_SCANCODE_W] || KeyState[SDL_SCANCODE_UP])
+            move_up();
+        if (KeyState[SDL_SCANCODE_S] || KeyState[SDL_SCANCODE_DOWN])
+            move_down();
+        if (KeyState[SDL_SCANCODE_A] || KeyState[SDL_SCANCODE_LEFT])
+            move_left();
+        if (KeyState[SDL_SCANCODE_D] || KeyState[SDL_SCANCODE_RIGHT])
+            move_right();
+
+        map_struct(instance);
+        player_position(instance);
+
+        if (win(instance) == 1)
+            break;
+
         SDL_RenderPresent(instance.renderer);
     }
+
     SDL_DestroyRenderer(instance.renderer);
     SDL_DestroyWindow(instance.window);
+
     SDL_Quit();
     return 0;
 }
 
-void box_struct(SDL_Instance instance)
-{
-    int x, y, w = 45, h = 45;
-
-    for (y = 0; y < 16; ++y)
-    {
-        for (x = 0; x < 28; ++x)
-        {
-            if (y % 2 == 0)
-            {
-                if (x % 2 == 0)
-                    SDL_SetRenderDrawColor(instance.renderer, 150, 150, 150, 255); // Set color to red (R, G, B, A)
-                else
-                    SDL_SetRenderDrawColor(instance.renderer, 120, 120, 120, 255); // Set color to red (R, G, B, A)
-            }
-            else
-            {
-                if (x % 2 != 0)
-                    SDL_SetRenderDrawColor(instance.renderer, 150, 150, 150, 255); // Set color to red (R, G, B, A)
-                else
-                    SDL_SetRenderDrawColor(instance.renderer, 120, 120, 120, 255); // Set color to red (R, G, B, A)
-            }
-            if (map_grid[y][x] == 1)
-            {
-                SDL_Rect box[1] = {x * 45, y * 45, w, h};
-                SDL_RenderFillRect(instance.renderer, &box[0]);
-            }
-        }
-    }
-}
+/*
+This function initializes the variables for the window and renderer
+*/
 
 int init_instance(SDL_Instance *instance, int WIDTH, int HEIGHT)
 {
@@ -83,6 +82,10 @@ int init_instance(SDL_Instance *instance, int WIDTH, int HEIGHT)
     return 0;
 }
 
+/*
+Poll function for reading events
+*/
+
 int poll_events()
 {
     SDL_Event event;
@@ -95,9 +98,11 @@ int poll_events()
         case SDL_QUIT:
             return 1;
         case SDL_KEYDOWN:
-            key = event.key;
-            if (key.keysym.scancode == 0X29)
-                return 1;
+            switch (event.key.keysym.sym)
+            {
+            case SDLK_ESCAPE:
+                return 1; // Example: Quit on pressing Escape key
+            }
             break;
         }
     }
