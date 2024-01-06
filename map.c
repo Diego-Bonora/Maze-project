@@ -1,14 +1,16 @@
 #include "main.h"
 
 /*
-This is the map file, here you will find the grid for the map inside the initial_values variable.
-changing the values inside this variable will modifie the map, there are only 3 options for the map creation.
-Floor - if the value is 0, in that place in the map there will be a floor
-Wall - if the value is 1, in that place in the map there will be a wall inserted
-Spawn - if the value is 2, in that place in the map there will be a spawn point
-End - if the value is 3, in that place in the map there will be an end point
-There can only be one spawn point and end point, and if you put more than 1 it will only spawn the first one it reads
-For the player to spawn there must be 1 spawn point
+This is the map file. Inside the 'map_layout' variable, you'll find the grid for the map.
+Changing the values within this variable will modify the map.
+There are four options for map creation:
+Floor: If the value is 0, a floor will be placed in that map location.
+Wall: If the value is 1, a wall will be inserted in that map location.
+Spawn: If the value is 2, a spawn point will be created in that location.
+End: If the value is 3, an endpoint will be placed in that location.
+
+Note that there can only be one spawn point and one endpoint. If you include more than one, the game will use the first one it reads.
+It's crucial to include at least one spawn point. If no spawn points are placed, the game will be bugged, and you won't be able to move or play.
 */
 
 int **generate_map_grid(void)
@@ -17,7 +19,7 @@ int **generate_map_grid(void)
 
     /* This is the matrix to modify if you want to make your own map */
 
-    int initial_values[16][28] = {
+    int map_layout[16][28] = {
         {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
         {1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
         {1, 2, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 1},
@@ -41,9 +43,9 @@ int **generate_map_grid(void)
     {
         for (int x = 0; x < 28; x++)
         {
-            map_grid[y * 28 + x] = initial_values[y][x];
+            map_grid[y * 28 + x] = map_layout[y][x];
 
-            if (initial_values[y][x] == 2 && flag == 0)
+            if (map_layout[y][x] == 2 && flag == 0)
             {
                 square.pos_x = x * 45 + 45 / 2;
                 square.pos_y = y * 45 + 45 / 2;
