@@ -1,6 +1,8 @@
 #include "main.h"
 
-int map_grid[16][28];
+int map_grid[16 * 28];
+int map_grid_floor[16 * 28];
+float PI = 3.14159265359, PI2 = 3.14159265359 / 2, PI3 = 3 * 3.14159265359 / 2, DR = 0.0174533;
 struct Player square;
 int WIDTH = 1260, HEIGHT = 720;
 
@@ -12,11 +14,12 @@ int main(int argc, char *argv[])
 {
     generate_map_grid();
 
-    const Uint8 *KeyState;
-
     /* size and movement speed of the player */
     square.size = 7;
     square.movement_speed = 1;
+    square.player_angle = PI / 2;
+    square.delta_x = cos(square.player_angle) * square.movement_speed;
+    square.delta_y = sin(square.player_angle) * square.movement_speed;
 
     SDL_Instance instance;
 
@@ -25,23 +28,20 @@ int main(int argc, char *argv[])
 
     while (1)
     {
+        SDL_SetRenderDrawBlendMode(instance.renderer, SDL_BLENDMODE_BLEND);
         SDL_SetRenderDrawColor(instance.renderer, 255, 255, 255, 255); /* background color of the window, in this case white */
         SDL_RenderClear(instance.renderer);                            /* clears the screen */
         if (poll_events() == 1)
             break;
 
-        KeyState = SDL_GetKeyboardState(NULL); /* state checker for the player movement */
-        if (KeyState[SDL_SCANCODE_W] || KeyState[SDL_SCANCODE_UP])
-            move_up();
-        if (KeyState[SDL_SCANCODE_S] || KeyState[SDL_SCANCODE_DOWN])
-            move_down();
-        if (KeyState[SDL_SCANCODE_A] || KeyState[SDL_SCANCODE_LEFT])
-            move_left();
-        if (KeyState[SDL_SCANCODE_D] || KeyState[SDL_SCANCODE_RIGHT])
-            move_right();
+        movements();
 
-        map_struct(instance);
-        player_position(instance);
+        /* if you have all 3 lines at once, the view will be buggy */
+
+        // map_struct(instance);      /* if this line is commented out, the 2D map will be disabled */
+        // player_position(instance); /* if this line is commented out, the 2D player position will be disabled */
+
+        draw_rays(instance); /* if this line is commented out, 3D raycast will be disabled */
 
         if (win(instance) == 1)
             break;
