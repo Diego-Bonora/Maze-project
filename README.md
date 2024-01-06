@@ -7,6 +7,12 @@ This is the first time I'm working with SDL2 with the purpose of making a 3D maz
 If you want to install this game you must have a C compiler installed on your device.
 Then, you will need to clone the repository and execute the 'make' command. If you don't have 'make' installed on your device, you can simply open the Makefile, copy the GCC line, run it in the console, and then run the executable file.
 
+Use this command to clone the repository
+
+```
+git clone https://github.com/Diego-Bonora/Maze-project.git
+```
+
 ## How to play
 
 This is a simple maze game. The controls are 'w', 'a', 's', 'd', or arrow keys. The objective of the game is to reach the end. The starting point is indicated by green walls, and the endpoint is marked by red walls.
