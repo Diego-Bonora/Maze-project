@@ -16,10 +16,11 @@ int **generate_map_grid(void)
     int flag = 0;
 
     /* This is the matrix to modify if you want to make your own map */
+
     int initial_values[16][28] = {
         {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-        {1, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-        {1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 1},
+        {1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+        {1, 2, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 1},
         {1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 1},
         {1, 0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1},
         {1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1},
@@ -30,8 +31,8 @@ int **generate_map_grid(void)
         {1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1},
         {1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1},
         {1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1},
-        {1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 0, 0, 0, 0, 1},
-        {1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 3, 1},
+        {1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1},
+        {1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 3, 1},
         {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
     };
 
@@ -40,12 +41,12 @@ int **generate_map_grid(void)
     {
         for (int x = 0; x < 28; x++)
         {
-            map_grid[y][x] = initial_values[y][x];
+            map_grid[y * 28 + x] = initial_values[y][x];
 
             if (initial_values[y][x] == 2 && flag == 0)
             {
-                square.pos_x = x * 45 + 19;
-                square.pos_y = y * 45 + 19;
+                square.pos_x = x * 45 + 45 / 2;
+                square.pos_y = y * 45 + 45 / 2;
                 flag == 1;
             }
         }
@@ -61,9 +62,9 @@ void map_struct(SDL_Instance instance)
 {
     int y, x, block = 45, spawn_point = 0, end_point = 0, colorId;
 
-    for (y = 0; y < 16; ++y)
+    for (y = 0; y < 16; y++)
     {
-        for (x = 0; x < 28; ++x)
+        for (x = 0; x < 28; x++)
         {
             /* ternary operators to decide wich color to use in the next wall block generation */
             colorId = (y % 2 == 0) ? ((x % 2 == 0) ? 1 : 2) : ((x % 2 != 0) ? 1 : 2);
@@ -71,17 +72,17 @@ void map_struct(SDL_Instance instance)
 
             SDL_Rect box[1] = {x * block, y * block, block, block};
 
-            if (map_grid[y][x] == 2 && spawn_point == 0) /* spawn point */
+            if (map_grid[y * 28 + x] == 2 && spawn_point == 0) /* spawn point */
             {
                 wall_color(3, instance);
                 spawn_point = 1;
             }
-            else if (map_grid[y][x] == 3 && end_point == 0) /* end point */
+            else if (map_grid[y * 28 + x] == 3 && end_point == 0) /* end point */
             {
                 wall_color(4, instance);
                 end_point = 1;
             }
-            if (map_grid[y][x] != 0) /* if not air generates the block */
+            if (map_grid[y * 28 + x] != 0) /* if not air generates the block */
                 SDL_RenderFillRect(instance.renderer, &box[0]);
         }
     }
