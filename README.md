@@ -1,16 +1,30 @@
 # The Maze Project!
 
-This is the first time I'm working with SDL2 with the purpose of making a 3D maze game.
+This is the first time I'm working with SDL2 with the purpose of making a 3D maze game.<br>
+I encountered difficulties running it on Linux, so unfortunately, I won't be able to provide instructions for Linux users.
 
-## How to install
+## How to install (Windows only)
 
 If you want to install this game you must have a C compiler installed on your device.
+
+If it's not already installed, you can easily set it up by following the installation process provided here.
+
+```
+https://code.visualstudio.com/docs/cpp/config-mingw
+```
+
 Then, you will need to clone the repository and execute the 'make' command. If you don't have 'make' installed on your device, you can simply open the Makefile, copy the GCC line, run it in the console, and then run the executable file.
 
 Use this command to clone the repository
 
 ```
 git clone https://github.com/Diego-Bonora/Maze-project.git
+```
+
+If you dont have GitHub installed you can do it here.
+
+```
+https://git-scm.com/downloads
 ```
 
 ## How to play
